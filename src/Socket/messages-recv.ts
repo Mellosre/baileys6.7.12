@@ -871,7 +871,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		}
 
 		if(placeholderResendCache.get(messageKey?.id!)) {
-			logger.debug('already requested resend', { messageKey })
+			logger.debug({ messageKey }, 'already requested resend')
 			return
 		} else {
 			placeholderResendCache.set(messageKey?.id!, true)
@@ -880,7 +880,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		await delay(5000)
 
 		if(!placeholderResendCache.get(messageKey?.id!)) {
-			logger.debug('message received while resend requested', { messageKey })
+			logger.debug({ messageKey }, 'message received while resend requested')
 			return 'RESOLVED'
 		}
 
@@ -893,7 +893,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 
 		setTimeout(() => {
 			if(placeholderResendCache.get(messageKey?.id!)) {
-				logger.debug('PDO message without response after 15 seconds. Phone possibly offline', { messageKey })
+				logger.debug({ messageKey }, 'PDO message without response after 15 seconds. Phone possibly offline')
 				placeholderResendCache.del(messageKey?.id!)
 			}
 		}, 15_000)
