@@ -15,6 +15,7 @@ import {
 	delay,
 	derivePairingCodeKey,
 	encodeBigEndian,
+	generateMessageIDV2,
 	encodeSignedDeviceIdentity,
 	getCallStatusFromNode,
 	getHistoryMsg,
@@ -39,6 +40,7 @@ import {
 	isJidGroup, isJidStatusBroadcast,
 	isJidUser,
 	jidDecode,
+        jidEncode,
 	jidNormalizedUser,
 	S_WHATSAPP_NET
 } from '../WABinary'
@@ -70,6 +72,8 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		sendReceipt,
 		uploadPreKeys,
 		sendPeerDataOperationMessage,
+		getUSyncDevices,
+		createParticipantNodes
 	} = sock
 
 	/** this mutex ensures that each retryRequest will wait for the previous one to finish */
@@ -211,6 +215,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		const stanza: BinaryNode = ({
 			tag: 'call',
 			attrs: {
+				id: generateMessageIDV2(),
 				from: authState.creds.me!.id,
 				to: callFrom,
 			},
